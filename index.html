@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#F8F9F9"/>
+<title>Festivals — Concerto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:        #F8F9F9;
+  --ink:       #0E1A2B;
+  --ink-2:     rgba(14,26,43,.55);
+  --ink-3:     rgba(14,26,43,.28);
+  --ink-4:     rgba(14,26,43,.10);
+  --gold:      #121E36;
+  --gold-soft: rgba(18,30,54,.10);
+  --gold-line: rgba(18,30,54,.25);
+  --white:     #ffffff;
+  --card:      rgba(255,255,255,.82);
+  --card-b:    rgba(14,26,43,.09);
+  --red:       #C0392B;
+  --r-sm: 14px; --r-md: 20px; --r-lg: 28px;
+  --display: 'Playfair Display', Georgia, serif;
+  --body:    'DM Sans', system-ui, sans-serif;
+  --spring: cubic-bezier(.16,1,.3,1);
+  --ease:   cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+button { cursor:pointer; background:none; border:none; color:inherit; font-family:var(--body); }
+a { color:inherit; text-decoration:none; }
+
+/* ── NAV ── */
+.topbar {
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px 12px;
+  background: rgba(248,249,249,.92);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--card-b);
+}
+.topbar-logo { display:flex; flex-direction:column; gap:1px; }
+.topbar-logo-word { font-family:var(--display); font-size:18px; font-weight:700; color:var(--ink); letter-spacing:.02em; line-height:1; }
+.topbar-logo-sub  { font-size:9px; font-weight:600; letter-spacing:.18em; color:var(--gold); text-transform:uppercase; }
+.topbar-nav { display:flex; gap:4px; }
+.nav-link { font-size:12px; font-weight:500; color:var(--ink-2); padding:6px 12px; border-radius:var(--r-sm); transition:background .18s,color .18s; }
+.nav-link:hover  { background:var(--ink-4); color:var(--ink); }
+.nav-link.active { background:var(--ink); color:var(--white); }
+
+/* ── HERO ── */
+.hero { padding:36px 20px 28px; border-bottom:1px solid var(--card-b); background:var(--white); }
+.hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
+.hero-headline { font-family:var(--display); font-size:clamp(32px,6vw,48px); font-weight:700; line-height:1.08; color:var(--ink); letter-spacing:-.01em; margin-bottom:10px; }
+.hero-headline em { font-style:italic; color:var(--ink-2); }
+.hero-sub { font-size:14px; color:var(--ink-2); line-height:1.55; max-width:480px; margin-bottom:24px; }
+.hero-stats { display:flex; gap:28px; flex-wrap:wrap; }
+.hero-stat-num   { font-family:var(--display); font-size:28px; font-weight:700; color:var(--ink); line-height:1; }
+.hero-stat-label { font-size:11px; color:var(--ink-3); font-weight:500; letter-spacing:.06em; margin-top:3px; text-transform:uppercase; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  position:sticky; top:57px; z-index:100;
+  background:rgba(248,249,249,.96);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--card-b);
+  padding:0 20px;
+}
+.filter-inner { display:flex; align-items:center; height:52px; overflow-x:auto; scrollbar-width:none; }
+.filter-inner::-webkit-scrollbar { display:none; }
+.filter-group { display:flex; align-items:center; gap:6px; flex-shrink:0; padding-right:16px; margin-right:16px; border-right:1px solid var(--card-b); }
+.filter-group:last-of-type { border-right:none; margin-right:0; padding-right:0; }
+.filter-label { font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap; flex-shrink:0; }
+.filter-pills { display:flex; gap:4px; }
+.pill { padding:5px 12px; border-radius:999px; border:1.5px solid var(--card-b); background:transparent; font-size:11px; font-weight:500; color:var(--ink-2); white-space:nowrap; transition:all .16s; font-family:var(--body); }
+.pill:hover  { border-color:var(--ink-3); color:var(--ink); background:var(--white); }
+.pill.active { background:var(--ink); color:var(--white); border-color:var(--ink); }
+.search-field { margin-left:auto; flex-shrink:0; position:relative; display:flex; align-items:center; }
+.search-field input { background:var(--white); border:1.5px solid var(--card-b); border-radius:var(--r-sm); padding:7px 14px 7px 32px; font-family:var(--body); font-size:12px; color:var(--ink); outline:none; width:180px; transition:border-color .18s,box-shadow .18s; }
+.search-field input::placeholder { color:var(--ink-3); }
+.search-field input:focus { border-color:var(--gold); box-shadow:0 0 0 3px var(--gold-soft); }
+.search-field-icon { position:absolute; left:10px; font-size:12px; color:var(--ink-3); pointer-events:none; }
+
+/* ── MAIN ── */
+.main { padding:20px 20px 80px; }
+.results-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.results-count { font-size:12px; color:var(--ink-3); font-weight:500; }
+.results-count strong { color:var(--ink); font-size:13px; }
+
+/* ── GRID ── */
+.festival-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; }
+
+/* ── CARD ── */
+.festival-card {
+  background:var(--card); border:1px solid var(--card-b); border-radius:var(--r-md);
+  overflow:hidden; cursor:pointer;
+  transition:transform .2s var(--spring),box-shadow .2s,border-color .2s;
+  backdrop-filter:blur(8px); position:relative;
+  animation:card-in .38s var(--spring) both;
+}
+@keyframes card-in { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+.festival-card:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(14,26,43,.1); border-color:var(--gold-line); }
+.festival-card:hover .card-arrow { background:var(--ink); color:var(--white); transform:scale(1.1); }
+.festival-card:active { transform:scale(.99); }
+.festival-card.active { border-color:var(--ink); }
+
+.card-accent { height:3px; width:100%; }
+.card-body { padding:16px 16px 14px; }
+.card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+.card-badge { font-size:9px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; padding:4px 9px; border-radius:999px; border:1.5px solid var(--card-b); color:var(--ink-3); }
+.card-badge.upcoming { border-color:rgba(18,30,54,.2); color:var(--gold); background:var(--gold-soft); }
+.card-genre { font-size:10px; font-weight:500; color:var(--ink-3); letter-spacing:.08em; }
+.card-name     { font-family:var(--display); font-size:22px; font-weight:700; line-height:1.1; color:var(--ink); margin-bottom:3px; }
+.card-location { font-size:12px; color:var(--ink-3); font-weight:500; margin-bottom:10px; }
+.card-dates    { font-family:var(--display); font-size:13px; font-style:italic; color:var(--ink-2); margin-bottom:12px; }
+.card-headliners { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+.hl-tag { font-size:11px; font-weight:500; color:var(--ink); background:var(--ink-4); padding:4px 10px; border-radius:999px; }
+.hl-tag.more { color:var(--ink-3); background:transparent; border:1px solid var(--card-b); }
+.card-footer { display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid var(--card-b); }
+.card-meta-row { display:flex; gap:12px; }
+.card-meta-item { font-size:11px; color:var(--ink-3); font-weight:500; }
+.card-arrow { width:28px; height:28px; border-radius:50%; background:var(--ink-4); display:grid; place-items:center; font-size:13px; color:var(--ink-2); transition:background .18s,color .18s,transform .18s var(--spring); flex-shrink:0; }
+
+/* ── SHIMMER ── */
+.shimmer-card { height:220px; border-radius:var(--r-md); background:linear-gradient(90deg,rgba(14,26,43,.04) 0%,rgba(14,26,43,.08) 40%,rgba(14,26,43,.04) 80%); background-size:200% 100%; animation:shimmer 1.4s ease-in-out infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── OVERLAY ── */
+.drawer-overlay { position:fixed; inset:0; background:rgba(14,26,43,.35); backdrop-filter:blur(4px); z-index:300; opacity:0; pointer-events:none; transition:opacity .3s var(--ease); }
+.drawer-overlay.open { opacity:1; pointer-events:all; }
+
+/* ── DRAWER ── */
+.drawer { position:fixed; right:0; top:0; bottom:0; width:min(600px,100vw); background:var(--bg); border-left:1px solid var(--card-b); z-index:400; display:flex; flex-direction:column; transform:translateX(100%); transition:transform .38s var(--spring); box-shadow:-20px 0 60px rgba(14,26,43,.12); }
+.drawer.open { transform:translateX(0); }
+
+.drawer-header { flex:0 0 auto; padding:20px 20px 16px; border-bottom:1px solid var(--card-b); background:var(--white); position:relative; }
+.drawer-accent  { position:absolute; top:0; left:0; right:0; height:3px; }
+.drawer-close   { position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:var(--ink-4); display:grid; place-items:center; font-size:14px; color:var(--ink-2); transition:background .18s,color .18s,transform .18s var(--spring); }
+.drawer-close:hover { background:var(--ink); color:var(--white); transform:scale(1.06); }
+.drawer-eyebrow { font-size:9px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; padding-top:6px; }
+.drawer-name    { font-family:var(--display); font-size:34px; font-weight:700; color:var(--ink); line-height:1.05; letter-spacing:-.01em; margin-bottom:4px; }
+.drawer-sub     { font-size:13px; color:var(--ink-2); line-height:1.45; }
+
+/* ── DRAWER TABS ── */
+.drawer-tabs { flex:0 0 auto; display:flex; padding:0 20px; border-bottom:1px solid var(--card-b); background:var(--white); overflow-x:auto; scrollbar-width:none; }
+.drawer-tabs::-webkit-scrollbar { display:none; }
+.dtab { padding:13px 0; margin-right:24px; font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); border:none; border-bottom:2px solid transparent; background:none; cursor:pointer; white-space:nowrap; transition:color .18s,border-color .18s; font-family:var(--body); }
+.dtab:hover  { color:var(--ink); }
+.dtab.active { color:var(--ink); border-bottom-color:var(--ink); }
+
+/* ── DRAWER SCROLL ── */
+.drawer-scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:22px 20px 40px; scrollbar-width:thin; scrollbar-color:var(--card-b) transparent; }
+.drawer-scroll::-webkit-scrollbar { width:3px; }
+.drawer-scroll::-webkit-scrollbar-track { background:transparent; }
+.drawer-scroll::-webkit-scrollbar-thumb { background:var(--card-b); border-radius:2px; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ── LINEUP ── */
+.lineup-tier { margin-bottom:26px; }
+.tier-label { font-size:9px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+.tier-label::after { content:''; flex:1; height:1px; background:var(--card-b); }
+.artist-chips { display:flex; flex-wrap:wrap; gap:7px; }
+.artist-chip { font-family:var(--display); padding:7px 16px; border:1px solid var(--card-b); border-radius:var(--r-sm); background:var(--white); color:var(--ink); transition:border-color .16s,background .16s; cursor:default; }
+.artist-chip:hover { border-color:var(--gold-line); background:var(--gold-soft); }
+.artist-chip.h1 { font-size:18px; font-weight:500; border-color:rgba(14,26,43,.14); }
+.artist-chip.h2 { font-size:14px; }
+.artist-chip.h3 { font-size:12px; color:var(--ink-2); }
+
+/* ── SCHEDULE ── */
+.schedule-day { margin-bottom:24px; }
+.day-header { font-family:var(--display); font-size:17px; font-weight:500; color:var(--ink); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--card-b); display:flex; align-items:baseline; gap:8px; }
+.day-date-sub { font-family:var(--body); font-size:11px; color:var(--ink-3); font-weight:500; }
+.schedule-slot { display:grid; grid-template-columns:68px 1fr auto; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--card-b); }
+.schedule-slot:last-child { border-bottom:none; }
+.slot-time   { font-size:11px; color:var(--ink-3); font-weight:500; }
+.slot-artist { font-size:13px; color:var(--ink); }
+.slot-stage  { font-size:10px; color:var(--ink-3); font-weight:500; text-align:right; }
+
+/* ── LOGISTICS ── */
+.logistics-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.logistics-card { background:var(--white); border:1px solid var(--card-b); border-radius:var(--r-md); padding:16px; }
+.logistics-icon  { font-size:20px; margin-bottom:8px; }
+.logistics-title { font-size:9px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+.logistics-value { font-size:13px; color:var(--ink); line-height:1.5; }
+.logistics-note  { font-size:11px; color:var(--ink-2); line-height:1.5; margin-top:4px; }
+.policy-pill { display:inline-block; font-size:9px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-top:6px; }
+.policy-pill.yes { background:rgba(39,174,96,.1); color:#27ae60; border:1px solid rgba(39,174,96,.2); }
+.policy-pill.no  { background:rgba(192,57,43,.08); color:var(--red); border:1px solid rgba(192,57,43,.15); }
+
+/* ── MAP ── */
+.map-venue-card { background:var(--ink); border-radius:var(--r-lg); padding:22px; margin-bottom:12px; position:relative; overflow:hidden; }
+.map-venue-card::after { content:''; position:absolute; right:-30px; top:-30px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle,var(--gold-soft) 0%,transparent 70%); pointer-events:none; }
+.map-venue-eyebrow { font-size:9px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:6px; }
+.map-venue-name    { font-family:var(--display); font-size:22px; font-weight:700; color:var(--white); line-height:1.1; margin-bottom:6px; }
+.map-venue-address { font-size:13px; color:rgba(255,255,255,.5); line-height:1.45; }
+.map-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.map-detail-card  { background:var(--white); border:1px solid var(--card-b); border-radius:var(--r-md); padding:14px; }
+.map-detail-label { font-size:9px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px; }
+.map-detail-value { font-size:13px; color:var(--ink); line-height:1.4; }
+.parking-note-card { background:var(--gold-soft); border:1.5px solid var(--gold-line); border-radius:var(--r-md); padding:14px 16px; margin-bottom:16px; }
+.parking-note-label { font-size:9px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:5px; }
+.parking-note-text  { font-size:13px; color:var(--ink-2); line-height:1.5; }
+
+.primary-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:15px; border-radius:var(--r-md); background:var(--ink); color:var(--white); font-size:14px; font-weight:600; letter-spacing:.02em; transition:background .2s,transform .2s var(--spring),box-shadow .2s; box-shadow:0 8px 28px rgba(14,26,43,.18); }
+.primary-btn:hover { background:#1a2d47; transform:translateY(-1px); box-shadow:0 12px 36px rgba(14,26,43,.24); }
+.primary-btn:active { transform:scale(.99); }
+.ghost-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:13px; border-radius:var(--r-md); border:1.5px solid var(--card-b); background:var(--white); font-size:13px; font-weight:600; color:var(--ink-2); margin-top:8px; transition:border-color .18s,color .18s,transform .18s var(--spring); }
+.ghost-btn:hover { border-color:var(--ink-3); color:var(--ink); transform:translateY(-1px); }
+
+/* ── EMPTY / TOAST ── */
+.empty-state { grid-column:1/-1; text-align:center; padding:80px 20px; }
+.empty-state-title { font-family:var(--display); font-size:24px; font-weight:500; color:var(--ink-2); margin-bottom:8px; }
+.empty-state-sub { font-size:13px; color:var(--ink-3); }
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(14px); background:var(--ink); color:var(--white); font-size:13px; font-weight:500; padding:11px 20px; border-radius:999px; box-shadow:0 8px 28px rgba(14,26,43,.24); z-index:600; white-space:nowrap; opacity:0; transition:opacity .28s var(--spring),transform .28s var(--spring); pointer-events:none; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:600px) {
+  .topbar-nav { display:none; }
+  .logistics-grid, .map-detail-grid { grid-template-columns:1fr; }
+  .drawer { width:100vw; }
+  .festival-grid { grid-template-columns:1fr; }
+  .hero-stats { gap:20px; }
+}
+.festival-card:nth-child(1){animation-delay:.03s}.festival-card:nth-child(2){animation-delay:.06s}
+.festival-card:nth-child(3){animation-delay:.09s}.festival-card:nth-child(4){animation-delay:.12s}
+.festival-card:nth-child(5){animation-delay:.15s}.festival-card:nth-child(6){animation-delay:.18s}
+.festival-card:nth-child(7){animation-delay:.21s}.festival-card:nth-child(8){animation-delay:.24s}
+.festival-card:nth-child(9){animation-delay:.27s}.festival-card:nth-child(10){animation-delay:.30s}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">
+    <span class="topbar-logo-word">Concerto</span>
+    <span class="topbar-logo-sub">Festival Guide</span>
+  </div>
+  <nav class="topbar-nav">
+    <a href="#" class="nav-link">Features</a>
+    <a href="#" class="nav-link active">Festivals</a>
+    <a href="#" class="nav-link">Setlists</a>
+    <a href="#" class="nav-link">Concerto+</a>
+  </nav>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Festival Guide 2025</div>
+  <h1 class="hero-headline">Every festival.<br><em>One guide.</em></h1>
+  <p class="hero-sub">Lineups, logistics, schedules, and everything you need to plan your season — from bag policy to the best set of the weekend.</p>
+  <div class="hero-stats">
+    <div><div class="hero-stat-num" id="statFestivals">30</div><div class="hero-stat-label">Festivals</div></div>
+    <div><div class="hero-stat-num">500+</div><div class="hero-stat-label">Artists</div></div>
+    <div><div class="hero-stat-num">6</div><div class="hero-stat-label">Genres</div></div>
+    <div><div class="hero-stat-num">5</div><div class="hero-stat-label">Regions</div></div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="filter-group">
+      <span class="filter-label">Month</span>
+      <div class="filter-pills">
+        <button class="pill active" data-filter="month" data-value="all">All</button>
+        <button class="pill" data-filter="month" data-value="Apr">Apr</button>
+        <button class="pill" data-filter="month" data-value="May">May</button>
+        <button class="pill" data-filter="month" data-value="Jun">Jun</button>
+        <button class="pill" data-filter="month" data-value="Jul">Jul</button>
+        <button class="pill" data-filter="month" data-value="Aug">Aug</button>
+        <button class="pill" data-filter="month" data-value="Sep">Sep</button>
+        <button class="pill" data-filter="month" data-value="Oct">Oct</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Genre</span>
+      <div class="filter-pills">
+        <button class="pill active" data-filter="genre" data-value="all">All</button>
+        <button class="pill" data-filter="genre" data-value="Multi-Genre">Multi</button>
+        <button class="pill" data-filter="genre" data-value="Rock">Rock</button>
+        <button class="pill" data-filter="genre" data-value="Electronic">Electronic</button>
+        <button class="pill" data-filter="genre" data-value="Hip-Hop">Hip-Hop</button>
+        <button class="pill" data-filter="genre" data-value="Country">Country</button>
+        <button class="pill" data-filter="genre" data-value="Folk">Folk</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Region</span>
+      <div class="filter-pills">
+        <button class="pill active" data-filter="region" data-value="all">All</button>
+        <button class="pill" data-filter="region" data-value="East">East</button>
+        <button class="pill" data-filter="region" data-value="West">West</button>
+        <button class="pill" data-filter="region" data-value="South">South</button>
+        <button class="pill" data-filter="region" data-value="Midwest">Midwest</button>
+        <button class="pill" data-filter="region" data-value="International">Intl</button>
+      </div>
+    </div>
+    <div class="search-field">
+      <span class="search-field-icon">⌕</span>
+      <input type="text" placeholder="Search festivals or artists…" id="searchInput"/>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+  <div class="results-bar">
+    <div class="results-count"><strong id="countNum">—</strong> festivals</div>
+  </div>
+  <div class="festival-grid" id="festivalGrid">
+    <div class="shimmer-card"></div>
+    <div class="shimmer-card"></div>
+    <div class="shimmer-card"></div>
+    <div class="shimmer-card"></div>
+    <div class="shimmer-card"></div>
+    <div class="shimmer-card"></div>
+  </div>
+</main>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-accent" id="drawerAccent"></div>
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <div class="drawer-eyebrow" id="drawerEyebrow"></div>
+    <div class="drawer-name" id="drawerName"></div>
+    <div class="drawer-sub" id="drawerSub"></div>
+  </div>
+  <div class="drawer-tabs">
+    <button class="dtab active" data-tab="lineup">Lineup</button>
+    <button class="dtab" data-tab="schedule">Schedule</button>
+    <button class="dtab" data-tab="logistics">Logistics</button>
+    <button class="dtab" data-tab="map">Map & Travel</button>
+  </div>
+  <div class="drawer-scroll">
+    <div class="tab-panel active" id="tab-lineup"></div>
+    <div class="tab-panel" id="tab-schedule"></div>
+    <div class="tab-panel" id="tab-logistics"></div>
+    <div class="tab-panel" id="tab-map"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQwgrdVXphjiYcgj9GtlLTkFu8pRc8OaB1ueZH7qHqGFtBSBwWkxHpUSPgctIQ6sZy3LVZh1kF14yXW/pub?gid=1689176314&single=true&output=csv';
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = parseCSVRow(lines[0]);
+  return lines.slice(1).map(line => {
+    const values = parseCSVRow(line), obj = {};
+    headers.forEach((h,i) => { obj[h.trim().toLowerCase().replace(/ /g,'_')] = (values[i]||'').trim(); });
+    return obj;
+  }).filter(r => r.id && r.name);
+}
+function parseCSVRow(line) {
+  const result = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    if (line[i]==='"') { inQ=!inQ; }
+    else if (line[i]===',' && !inQ) { result.push(cur); cur=''; }
+    else { cur+=line[i]; }
+  }
+  result.push(cur); return result;
+}
+function rowToFestival(r) {
+  const sp = s => (s||'').split('|').map(x=>x.trim()).filter(Boolean);
+  const parseSlots = s => (s||'').split('|').map(slot => {
+    const p = slot.trim().split(' - ');
+    return p.length>=3 ? {time:p[0].trim(),artist:p[1].trim(),stage:p.slice(2).join(' - ').trim()} : null;
+  }).filter(Boolean);
+  const schedule = [];
+  if (r.schedule_day1_label) schedule.push({day:r.schedule_day1_label, slots:parseSlots(r.schedule_day1_slots)});
+  if (r.schedule_day2_label) schedule.push({day:r.schedule_day2_label, slots:parseSlots(r.schedule_day2_slots)});
+  if (r.schedule_day3_label) schedule.push({day:r.schedule_day3_label, slots:parseSlots(r.schedule_day3_slots)});
+  return {
+    id: parseInt(r.id)||Math.random(),
+    name:r.name, location:r.location, region:r.region,
+    dates:r.dates, month:r.month, genre:r.genre,
+    color:r.color||'#0E1A2B', status:r.status||'upcoming',
+    headliners: sp(r.headliners),
+    lineup: {headliners:sp(r.headliners), day2:sp(r.featured), supporting:sp(r.supporting), emerging:sp(r.emerging)},
+    schedule,
+    logistics: {bags:r.bags||'',parking:r.parking||'',camping:r.camping||'',re_entry:r.re_entry||'',food:r.food||'',water:r.water||''},
+    map: {venue:r.venue||'',address:r.address||'',capacity:r.capacity||'',stages:r.stages||'',nearest_airport:r.nearest_airport||'',parking_note:r.parking_note||''}
+  };
+}
+
+async function init() {
+  if (SHEET_CSV_URL === 'PASTE_YOUR_SHEET_URL_HERE') {
+    document.getElementById('festivalGrid').innerHTML = `<div class="empty-state"><div class="empty-state-title">Connect your data</div><div class="empty-state-sub" style="max-width:340px;margin:0 auto;line-height:1.7">Paste your Google Sheets CSV URL into the <code>SHEET_CSV_URL</code> variable at the top of the script.</div></div>`;
+    document.getElementById('countNum').textContent = '0';
+    return;
+  }
+  try {
+    const res = await fetch(SHEET_CSV_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    FESTIVALS.length = 0;
+    parseCSV(text).forEach(row => FESTIVALS.push(rowToFestival(row)));
+    document.getElementById('statFestivals').textContent = FESTIVALS.length;
+    renderCards();
+  } catch(e) {
+    document.getElementById('festivalGrid').innerHTML = `<div class="empty-state"><div class="empty-state-title" style="color:var(--red)">Couldn't load festivals</div><div class="empty-state-sub">${e.message}</div></div>`;
+    document.getElementById('countNum').textContent = '0';
+  }
+}
+
+const FESTIVALS = [];
+let activeFilters = {month:'all',genre:'all',region:'all'};
+let searchQuery = '', activeCard = null;
+
+function renderCards() {
+  const grid = document.getElementById('festivalGrid');
+  const countEl = document.getElementById('countNum');
+  const filtered = FESTIVALS.filter(f => {
+    const mM = activeFilters.month==='all'  || f.month===activeFilters.month;
+    const mG = activeFilters.genre==='all'  || f.genre===activeFilters.genre;
+    const mR = activeFilters.region==='all' || f.region===activeFilters.region;
+    const mS = !searchQuery ||
+      f.name.toLowerCase().includes(searchQuery) ||
+      f.location.toLowerCase().includes(searchQuery) ||
+      (f.headliners||[]).some(h=>h.toLowerCase().includes(searchQuery));
+    return mM && mG && mR && mS;
+  });
+  countEl.textContent = filtered.length;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-state-title">No festivals found</div><div class="empty-state-sub">Try adjusting your filters or search</div></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map((f,i) => `
+    <div class="festival-card ${activeCard===f.id?'active':''}" data-id="${f.id}" style="animation-delay:${Math.min(i*.04,.4)}s">
+      <div class="card-accent" style="background:${f.color}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-badge ${f.status}">${f.status==='upcoming'?'Confirmed':'Announced'}</span>
+          <span class="card-genre">${f.genre}</span>
+        </div>
+        <div class="card-name">${f.name}</div>
+        <div class="card-location">${f.location}</div>
+        <div class="card-dates">${f.dates}</div>
+        <div class="card-headliners">
+          ${(f.headliners||[]).slice(0,3).map(h=>`<span class="hl-tag">${h}</span>`).join('')}
+          ${(f.lineup.day2||[]).length?`<span class="hl-tag more">+${(f.lineup.day2||[]).length+(f.lineup.supporting||[]).length} more</span>`:''}
+        </div>
+        <div class="card-footer">
+          <div class="card-meta-row">
+            <span class="card-meta-item">⏱ ${f.schedule.length}d</span>
+            <span class="card-meta-item">◎ ${f.region}</span>
+            <span class="card-meta-item">♪ ${(f.lineup.headliners||[]).length+(f.lineup.day2||[]).length+(f.lineup.supporting||[]).length+(f.lineup.emerging||[]).length}</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>`).join('');
+  grid.querySelectorAll('.festival-card').forEach(card => {
+    card.addEventListener('click', () => openDrawer(parseInt(card.dataset.id)));
+  });
+}
+
+function openDrawer(id) {
+  const f = FESTIVALS.find(x=>x.id===id); if (!f) return;
+  activeCard = id; renderCards();
+
+  document.getElementById('drawerAccent').style.background = f.color;
+  document.getElementById('drawerEyebrow').textContent = `${f.genre} · ${f.region}`;
+  document.getElementById('drawerName').textContent = f.name;
+  document.getElementById('drawerSub').textContent = `${f.location}  ·  ${f.dates}`;
+
+  document.getElementById('tab-lineup').innerHTML =
+    renderTier('Headliners', f.lineup.headliners, 'h1') +
+    renderTier('Featured', f.lineup.day2, 'h2') +
+    renderTier('Supporting', f.lineup.supporting, 'h3') +
+    renderTier('Emerging', f.lineup.emerging, 'h3');
+
+  document.getElementById('tab-schedule').innerHTML = f.schedule.length
+    ? f.schedule.map(day => `
+        <div class="schedule-day">
+          <div class="day-header">${day.day.split(',')[0]}<span class="day-date-sub">${day.day.split(',').slice(1).join(',').trim()}</span></div>
+          ${(day.slots||[]).map(s=>`<div class="schedule-slot"><span class="slot-time">${s.time}</span><span class="slot-artist">${s.artist}</span><span class="slot-stage">${s.stage}</span></div>`).join('')}
+        </div>`).join('')
+    : '<p style="font-size:13px;color:var(--ink-3);padding:20px 0;font-style:italic">Schedule not yet announced.</p>';
+
+  const campingAvail = !(f.logistics.camping||'').toLowerCase().includes('no camping');
+  document.getElementById('tab-logistics').innerHTML = `
+    <div class="logistics-grid">
+      <div class="logistics-card"><div class="logistics-icon">👜</div><div class="logistics-title">Bag Policy</div><div class="logistics-value">${(f.logistics.bags||'').split('.')[0]}.</div><div class="logistics-note">${(f.logistics.bags||'').split('.').slice(1).join('.').trim()}</div></div>
+      <div class="logistics-card"><div class="logistics-icon">🚗</div><div class="logistics-title">Parking</div><div class="logistics-value">${(f.logistics.parking||'').split('.')[0]}.</div><div class="logistics-note">${(f.logistics.parking||'').split('.').slice(1).join('.').trim()}</div></div>
+      <div class="logistics-card"><div class="logistics-icon">⛺</div><div class="logistics-title">Camping</div><span class="policy-pill ${campingAvail?'yes':'no'}">${campingAvail?'Available':'Not Available'}</span><div class="logistics-note" style="margin-top:8px">${f.logistics.camping||''}</div></div>
+      <div class="logistics-card"><div class="logistics-icon">🔄</div><div class="logistics-title">Re-Entry</div><div class="logistics-value">${f.logistics.re_entry||''}</div></div>
+      <div class="logistics-card"><div class="logistics-icon">🍔</div><div class="logistics-title">Food & Drink</div><div class="logistics-note">${f.logistics.food||''}</div></div>
+      <div class="logistics-card"><div class="logistics-icon">💧</div><div class="logistics-title">Water</div><div class="logistics-note">${f.logistics.water||''}</div></div>
+    </div>`;
+
+  document.getElementById('tab-map').innerHTML = `
+    <div class="map-venue-card">
+      <div class="map-venue-eyebrow">Venue</div>
+      <div class="map-venue-name">${f.map.venue}</div>
+      <div class="map-venue-address">${f.map.address}</div>
+    </div>
+    <div class="map-detail-grid">
+      <div class="map-detail-card"><div class="map-detail-label">Capacity</div><div class="map-detail-value">${f.map.capacity}</div></div>
+      <div class="map-detail-card"><div class="map-detail-label">Stages</div><div class="map-detail-value">${f.map.stages}</div></div>
+      <div class="map-detail-card" style="grid-column:1/-1"><div class="map-detail-label">Nearest Airport</div><div class="map-detail-value">${f.map.nearest_airport}</div></div>
+    </div>
+    <div class="parking-note-card">
+      <div class="parking-note-label">Parking & Transit Tip</div>
+      <div class="parking-note-text">${f.map.parking_note}</div>
+    </div>
+    <a class="primary-btn" href="https://maps.google.com/?q=${encodeURIComponent(f.map.address)}" target="_blank" rel="noopener">Open in Google Maps →</a>
+    <button class="ghost-btn" onclick="showToast('Open Concerto+ to build a night around this festival ✦')">Build a night around this festival ✦</button>`;
+
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.dtab[data-tab="lineup"]').classList.add('active');
+  document.getElementById('tab-lineup').classList.add('active');
+  document.querySelector('.drawer-scroll').scrollTop = 0;
+
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderTier(label, artists, cls) {
+  if (!artists||!artists.length) return '';
+  return `<div class="lineup-tier"><div class="tier-label">${label}</div><div class="artist-chips">${artists.map(a=>`<span class="artist-chip ${cls}">${a}</span>`).join('')}</div></div>`;
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  activeCard = null; renderCards();
+}
+
+let _tt;
+function showToast(msg, ms=2600) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(()=>el.classList.remove('show'), ms);
+}
+
+document.querySelectorAll('.pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    const type=pill.dataset.filter, val=pill.dataset.value;
+    activeFilters[type]=val;
+    pill.closest('.filter-pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+    pill.classList.add('active'); renderCards();
+  });
+});
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase().trim(); renderCards();
+});
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeDrawer(); });
+document.querySelectorAll('.dtab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+  });
+});
+
+init();
+</script>
+</body>
+</html>
