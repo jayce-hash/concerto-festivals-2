@@ -245,8 +245,8 @@ a { color:inherit; text-decoration:none; }
 
 <div class="topbar">
   <div class="topbar-logo">
-    <span class="topbar-logo-word">CONCERTO - FESTIVALS</span>
-    <span class="topbar-logo-sub">A Premium Experience</span>
+    <span class="topbar-logo-word">Concerto</span>
+    <span class="topbar-logo-sub">Festival Guide</span>
   </div>
   <nav class="topbar-nav">
     <a href="#" class="nav-link">Features</a>
@@ -257,7 +257,7 @@ a { color:inherit; text-decoration:none; }
 </div>
 
 <div class="hero">
-  <div class="hero-eyebrow">Festival Guides 2026</div>
+  <div class="hero-eyebrow">Festival Guide 2025</div>
   <h1 class="hero-headline">Every festival.<br><em>One guide.</em></h1>
   <p class="hero-sub">Lineups, logistics, schedules, and everything you need to plan your season — from bag policy to the best set of the weekend.</p>
   <div class="hero-stats">
@@ -385,7 +385,7 @@ function rowToFestival(r) {
   if (r.schedule_day2_label) schedule.push({day:r.schedule_day2_label, slots:parseSlots(r.schedule_day2_slots)});
   if (r.schedule_day3_label) schedule.push({day:r.schedule_day3_label, slots:parseSlots(r.schedule_day3_slots)});
   return {
-    id: parseInt(r.id)||Math.random(),
+    id: r.id || String(Math.random()),
     name:r.name, location:r.location, region:r.region,
     dates:r.dates, month:r.month, genre:r.genre,
     color:r.color||'#0E1A2B', status:r.status||'upcoming',
@@ -465,7 +465,7 @@ function renderCards() {
       </div>
     </div>`).join('');
   grid.querySelectorAll('.festival-card').forEach(card => {
-    card.addEventListener('click', () => openDrawer(parseInt(card.dataset.id)));
+    card.addEventListener('click', () => openDrawer(card.dataset.id));
   });
 }
 
