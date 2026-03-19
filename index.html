@@ -199,6 +199,15 @@ a { color:inherit; text-decoration:none; }
 .policy-pill.yes { background:rgba(39,174,96,.1); color:#27ae60; border:1px solid rgba(39,174,96,.2); }
 .policy-pill.no  { background:rgba(192,57,43,.08); color:var(--red); border:1px solid rgba(192,57,43,.15); }
 
+/* ── CITY GUIDE BANNER ── */
+.city-guide-banner { display:block; background:var(--ink); border-radius:var(--r-md); padding:20px; margin-bottom:16px; position:relative; overflow:hidden; text-decoration:none; transition:transform .2s var(--spring), box-shadow .2s; }
+.city-guide-banner:hover { transform:translateY(-2px); box-shadow:0 12px 30px rgba(14,26,43,.18); }
+.city-guide-banner::after { content:''; position:absolute; right:-30px; top:-30px; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle, rgba(201,168,76,0.2) 0%, transparent 70%); pointer-events:none; }
+.cgb-eyebrow { font-size:9px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:#C9A84C; margin-bottom:6px; }
+.cgb-title { font-family:var(--display); font-size:22px; font-weight:700; color:var(--white); display:flex; align-items:center; justify-content:space-between; line-height:1.1; margin-bottom:6px; }
+.cgb-arrow { font-family:var(--body); color:#C9A84C; font-size:18px; }
+.cgb-sub { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.4; }
+
 /* ── MAP ── */
 .map-venue-card { background:var(--ink); border-radius:var(--r-lg); padding:22px; margin-bottom:12px; position:relative; overflow:hidden; }
 .map-venue-card::after { content:''; position:absolute; right:-30px; top:-30px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle,var(--gold-soft) 0%,transparent 70%); pointer-events:none; }
@@ -354,7 +363,7 @@ a { color:inherit; text-decoration:none; }
 <div class="toast" id="toast"></div>
 
 <script>
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ706petMugfsECBxnZIrknA2U9JmrwhJTJURGmp1ja116G5H8pYuw6lp1A3HCGhw/pub?gid=2033803976&single=true&output=csv';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRyU9_fQrWXW_uOpShfEF7XhKXNZrchU8DCpByxWJ6yhsAvRZOMG4XNscct9ktBMwWnzrsdlAV_r0xu/pub?gid=1474619447&single=true&output=csv';
 
 function parseCSV(text) {
   const lines = text.trim().split('\n');
@@ -494,6 +503,11 @@ function openDrawer(id) {
 
   const campingAvail = !(f.logistics.camping||'').toLowerCase().includes('no camping');
   document.getElementById('tab-logistics').innerHTML = `
+    <a href="index.html?venue=${encodeURIComponent(f.map.venue)}" class="city-guide-banner">
+      <div class="cgb-eyebrow">Explore The Area</div>
+      <div class="cgb-title"><span>Concerto City Guide</span><span class="cgb-arrow">→</span></div>
+      <div class="cgb-sub">Pre-game spots, late-night slices, and hotels near the festival.</div>
+    </a>
     <div class="logistics-grid">
       <div class="logistics-card"><div class="logistics-icon">👜</div><div class="logistics-title">Bag Policy</div><div class="logistics-value">${(f.logistics.bags||'').split('.')[0]}.</div><div class="logistics-note">${(f.logistics.bags||'').split('.').slice(1).join('.').trim()}</div></div>
       <div class="logistics-card"><div class="logistics-icon">🚗</div><div class="logistics-title">Parking</div><div class="logistics-value">${(f.logistics.parking||'').split('.')[0]}.</div><div class="logistics-note">${(f.logistics.parking||'').split('.').slice(1).join('.').trim()}</div></div>
@@ -518,7 +532,7 @@ function openDrawer(id) {
       <div class="parking-note-label">Parking & Transit Tip</div>
       <div class="parking-note-text">${f.map.parking_note}</div>
     </div>
-    <a class="primary-btn" href="https://maps.google.com/?q=${encodeURIComponent(f.map.address)}" target="_blank" rel="noopener">Open in Google Maps →</a>
+    <a class="primary-btn" href="https://www.google.com/maps/search/?api=1&query=?q=$...2...{encodeURIComponent(f.map.address)}" target="_blank" rel="noopener">Open in Google Maps →</a>
     <button class="ghost-btn" onclick="showToast('Open Concerto+ to build a night around this festival ✦')">Build a night around this festival ✦</button>`;
 
   document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
