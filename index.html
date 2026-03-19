@@ -503,7 +503,7 @@ function openDrawer(id) {
 
   const campingAvail = !(f.logistics.camping||'').toLowerCase().includes('no camping');
   document.getElementById('tab-logistics').innerHTML = `
-    <a href="index.html?venue=${encodeURIComponent(f.map.venue)}" class="city-guide-banner">
+<a href="https://concerto-venue-map.netlify.app/?venue=${encodeURIComponent(f.map.venue)}" class="city-guide-banner">
       <div class="cgb-eyebrow">Explore The Area</div>
       <div class="cgb-title"><span>Concerto City Guide</span><span class="cgb-arrow">→</span></div>
       <div class="cgb-sub">Pre-game spots, late-night slices, and hotels near the festival.</div>
