@@ -49,7 +49,7 @@ a { color:inherit; text-decoration:none; }
   padding: 14px 20px 12px;
   background: rgba(248,249,249,.92);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--card-b);
+  border-bottom: 1px solid var(--card-b) !important;
 }
 .topbar-logo { display:flex; flex-direction:column; gap:1px; }
 .topbar-logo-word { font-family:var(--display); font-size:18px; font-weight:700; color:var(--ink); letter-spacing:.02em; line-height:1; }
@@ -60,11 +60,20 @@ a { color:inherit; text-decoration:none; }
 .nav-link.active { background:var(--ink); color:var(--white); }
 
 /* ── HERO ── */
-.hero { padding:36px 20px 28px; border-bottom:1px solid var(--card-b); background:var(--white); }
-.hero-eyebrow { font-size:10px; font-weight:600; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
-.hero-headline { font-family:var(--display); font-size:clamp(32px,6vw,48px); font-weight:700; line-height:1.08; color:var(--ink); letter-spacing:-.01em; margin-bottom:10px; }
-.hero-headline em { font-style:italic; color:var(--ink-2); }
-.hero-sub { font-size:14px; color:var(--ink-2); line-height:1.55; max-width:480px; margin-bottom:24px; }
+/* ── HERO ── */
+.hero { padding:24px 20px 0px; background:var(--bg); }
+.eyebrow {
+  font-size:10px; font-weight:600; letter-spacing:.2em;
+  color:var(--ink-3); text-transform:uppercase; margin-bottom:10px;
+}
+.headline {
+  font-family:var(--display); font-size:34px; font-weight:700; line-height:1.08;
+  color:var(--ink); letter-spacing:-.01em; margin-bottom:6px;
+}
+.headline em { font-style:italic; color:var(--ink-2); }
+.sub {
+  font-size:14px; color:var(--ink-3); line-height:1.6; margin-bottom:28px;
+}
 .hero-stats { display:flex; gap:28px; flex-wrap:wrap; }
 .hero-stat-num   { font-family:var(--display); font-size:28px; font-weight:700; color:var(--ink); line-height:1; }
 .hero-stat-label { font-size:11px; color:var(--ink-3); font-weight:500; letter-spacing:.06em; margin-top:3px; text-transform:uppercase; }
@@ -266,10 +275,10 @@ a { color:inherit; text-decoration:none; }
 </div>
 
 <div class="hero">
-  <div class="hero-eyebrow">Festival Guide 2025</div>
-  <h1 class="hero-headline">Every festival.<br><em>One guide.</em></h1>
-  <p class="hero-sub">Lineups, logistics, schedules, and everything you need to plan your season — from bag policy to the best set of the weekend.</p>
-  <div class="hero-stats">
+  <div class="eyebrow">Festival Guide 2026</div>
+  <h1 class="headline"><em>Every festival.<br>One guide.</em></h1>
+  <p class="sub">Lineups, logistics, schedules, and everything you need to plan your season — from bag policy to the best set of the weekend.</p>
+  <div class="hero-stats" style="padding-bottom: 24px;">
     <div><div class="hero-stat-num" id="statFestivals">30</div><div class="hero-stat-label">Festivals</div></div>
     <div><div class="hero-stat-num">500+</div><div class="hero-stat-label">Artists</div></div>
     <div><div class="hero-stat-num">6</div><div class="hero-stat-label">Genres</div></div>
